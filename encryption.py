@@ -1,5 +1,23 @@
 import random
 
+def characters_to_ascii_string(char_list):
+    """
+    Convert a list of characters into a string of their ASCII codes.
+
+    Args:
+        char_list (list): List of characters (e.g., ['a', 'b', '\0']).
+
+    Returns:
+        str: A string of ASCII codes joined by spaces (e.g., "97 98 0").
+    """
+    try:
+        # Convert each character to its ASCII code
+        ascii_codes = [f"{ord(char):03}" for char in char_list]
+        # Join the ASCII codes into a single string
+        return ''.join(ascii_codes)
+    except TypeError:
+        raise ValueError("Input must be a list of characters.")
+
 def encrypt(message, seed, containerNumber):
   random.seed(seed)
   
@@ -15,16 +33,14 @@ def encrypt(message, seed, containerNumber):
   messageCode = 0
   i = 0
   
-  for character in message:
-    messageCode += ord(character) * pow(10, i)
-    i += 3
+  messageCode = characters_to_ascii_string(message)
   
   print('message:')
   print(message)
   print('ASCII message:')
   print(messageCode)
   
-  messageCodeEncrypted = messageCode ^ key
+  messageCodeEncrypted = int(messageCode) ^ key
     
   encrypted_number_string_1 = str(round(containerNumber, 5)) + str(messageCode)
 
