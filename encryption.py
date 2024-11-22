@@ -3,9 +3,9 @@ import random
 def encrypt(message, seed, containerNumber):
   random.seed(seed)
   
-  keyLength = len(message*3)
+  keyLength = len(message)*3
   keyMin = pow(10, keyLength-1)
-  keyMax = (keyMin * 10) - 1;
+  keyMax = (keyMin * 10) - 1
   
   key = random.randint(keyMin, keyMax)
   
