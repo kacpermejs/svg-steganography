@@ -31,14 +31,12 @@ def encrypt(message, seed, containerNumber):
   print(key)
   
   messageCode = 0
-  i = 0
-  
   messageCode = characters_to_ascii_string(message)
   
-  print('message:')
-  print(message)
-  print('ASCII message:')
-  print(messageCode)
+  # print('message:')
+  # print(message)
+  # print('ASCII message:')
+  # print(messageCode)
   
   messageCodeEncrypted = int(messageCode) ^ key
     
@@ -54,7 +52,7 @@ def decrypt(seed, encrypted_number_string):
 
     # Sprawdź, czy kropka istnieje w ciągu
   if dot_index != -1:
-        # Ucinamy wszystko do kropki i 5 znaków po niej
+      # Ucinamy wszystko do kropki i 5 znaków po niej
       message_code_encrypted = encrypted_number_string[dot_index + 6:]
 
   random.seed(seed)
@@ -65,7 +63,10 @@ def decrypt(seed, encrypted_number_string):
   
   key = random.randint(keyMin, keyMax)
   
-  print('key:')
-  print(key)
+  decrypted_code = int(message_code_encrypted) ^ key
+  
+  decrypted_str = f"{decrypted_code:09d}"
+  
+  message = ''.join(chr(int(decrypted_str[i:i+3])) for i in range(0, 9, 3))
 
-  return int(message_code_encrypted) ^ key
+  return message
