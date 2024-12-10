@@ -1,6 +1,6 @@
 import re
 
-def modify_floats_in_svg(input_file_path, output_file_path, replacement_function, message):
+def modify_floats_in_svg(input_file_path, output_file_path, replacement_function, message, chunk_size):
     
     with open(input_file_path, 'r') as file:
         svg_content = file.read()
@@ -10,7 +10,6 @@ def modify_floats_in_svg(input_file_path, output_file_path, replacement_function
 
     message_list = list(message) + [stop_character]
 
-    chunk_size = 3
     partitioned_list = [message_list[i:i + chunk_size] for i in range(0, len(message_list), chunk_size)]
 
     print(partitioned_list)
@@ -37,7 +36,7 @@ def modify_floats_in_svg(input_file_path, output_file_path, replacement_function
         # Append the content before the current match
         modified_content.append(svg_content[last_end:match.start()])
         # Replace the current match
-        replacement = replacement_function((partitioned_list[counter]),match)
+        replacement = replacement_function((partitioned_list[counter]), match, chunk_size)
         modified_content.append(replacement)
         # Update the last_end to the end of the current match
         last_end = match.end()
@@ -55,7 +54,7 @@ def modify_floats_in_svg(input_file_path, output_file_path, replacement_function
 
     print(f"Modified SVG file saved to {output_file_path}.")
     
-def decrypt_message_from_svg(input_file_path, decryption_function):
+def decrypt_message_from_svg(input_file_path, decryption_function, chunk_size):
     # Read the encoded SVG content
     with open(input_file_path, 'r') as file:
         svg_content = file.read()
@@ -69,7 +68,7 @@ def decrypt_message_from_svg(input_file_path, decryption_function):
     # Decode each floating-point number using the extraction function
     decoded_message = []
     for match in matches:
-        decoded_chunk = decryption_function(match)
+        decoded_chunk = decryption_function(match, chunk_size)
         if isinstance(decoded_chunk, list):
             decoded_message.extend(decoded_chunk)
         else:

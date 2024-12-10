@@ -18,8 +18,14 @@ def characters_to_ascii_string(char_list):
     except TypeError:
         raise ValueError("Input must be a list of characters.")
 
-def encrypt(message, seed, containerNumber):
+def encrypt(message, seed, containerNumber, chunk_size):
   random.seed(seed)
+  
+  while len(message) < chunk_size:
+    if isinstance(message, list):
+      message.extend(['\0'])
+    else:
+      message.append(['\0'])
   
   keyLength = len(message)*3
   keyMin = pow(10, keyLength-1)
@@ -39,15 +45,17 @@ def encrypt(message, seed, containerNumber):
   # print(messageCode)
   
   messageCodeEncrypted = int(messageCode) ^ key
+  
+  rounded_number_str = f"{round(containerNumber, 5):.5f}"
     
-  encrypted_number_string_1 = str(round(containerNumber, 5)) + str(messageCode)
+  encrypted_number_string_1 = rounded_number_str + str(messageCode)
 
   print(encrypted_number_string_1)
 
-  encrypted_number_string = str(round(containerNumber, 5)) + str(messageCodeEncrypted)
+  encrypted_number_string = rounded_number_str + str(messageCodeEncrypted)
   return encrypted_number_string
   
-def decrypt(seed, encrypted_number_string):
+def decrypt(seed, encrypted_number_string, chunk_size):
   dot_index = encrypted_number_string.find('.')
 
     # Sprawdź, czy kropka istnieje w ciągu
@@ -67,6 +75,6 @@ def decrypt(seed, encrypted_number_string):
   
   decrypted_str = f"{decrypted_code:09d}"
   
-  message = ''.join(chr(int(decrypted_str[i:i+3])) for i in range(0, 9, 3))
+  message = ''.join(chr(int(decrypted_str[i:i+chunk_size])) for i in range(0, chunk_size*3, chunk_size))
 
   return message
