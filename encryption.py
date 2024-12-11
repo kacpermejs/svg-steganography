@@ -1,3 +1,5 @@
+from collections import deque
+import math
 import random
 
 def characters_to_ascii_string(char_list):
@@ -78,3 +80,41 @@ def decrypt(seed, encrypted_number_string, chunk_size):
   message = ''.join(chr(int(decrypted_str[i:i+chunk_size])) for i in range(0, chunk_size*3, chunk_size))
 
   return message
+
+def round_to_percent(value, percent=1):
+    if value == 0:
+        return 0  # No rounding needed for zero
+    # Calculate 1% of the value
+    precision = -int(math.log10(value * percent / 100))
+    return round(value, precision)
+
+def encrypt2(message: deque[list], seed, containerNumber):
+  random.seed(seed)
+  
+  keyLength = 9
+  keyMin = pow(10, keyLength-1)
+  keyMax = (keyMin * 10) - 1
+  
+  key = random.randint(keyMin, keyMax)
+  
+  print('key:')
+  print(key)
+  
+  number_to_save = str(containerNumber)
+  rounded = round_to_percent(containerNumber, 1)
+  encrypted_number_string = str(rounded)
+  
+  while True:
+    character = message[0]
+
+    messageCode = 0
+    messageCode = characters_to_ascii_string(character)
+
+    encrypted_number_string = encrypted_number_string + str(messageCode)
+    
+    if not ((str(float(encrypted_number_string)) == encrypted_number_string) and (round_to_percent(float(encrypted_number_string), 1) == rounded)):
+      break
+    message.popleft()
+    number_to_save = encrypted_number_string
+  
+  return number_to_save, message
