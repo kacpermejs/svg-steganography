@@ -67,17 +67,22 @@ def decrypt(seed, encrypted_number_string, chunk_size):
 
   random.seed(seed)
   
-  keyLength = len(message_code_encrypted)
+  keyLength = 3
   keyMin = pow(10, keyLength-1)
   keyMax = (keyMin * 10) - 1;
   
   key = random.randint(keyMin, keyMax)
   
-  decrypted_code = int(message_code_encrypted) ^ key
   
-  decrypted_str = f"{decrypted_code:09d}"
+  message = ''
+  for i in range(0, len(message_code_encrypted), 3):
+    group = message_code_encrypted[i:i+3]
+    
+    decrypted_code = int(group) ^ key
   
-  message = ''.join(chr(int(decrypted_str[i:i+chunk_size])) for i in range(0, chunk_size*3, chunk_size))
+    decrypted_str = f"{decrypted_code:03d}"
+  
+    message = message + (chr(int(decrypted_str)))
 
   return message
 
@@ -88,10 +93,29 @@ def round_to_percent(value, percent=1):
     precision = -int(math.log10(value * percent / 100))
     return round(value, precision)
 
+def pad(num, nPlaces):
+    """
+    Pads the given number string to nPlaces decimal places.
+
+    Parameters:
+        number_str (str): The input string representing a number.
+        nPlaces (int): The number of decimal places to pad to.
+
+    Returns:
+        str: The padded number as a string.
+    """
+    try:
+        
+        # Format the number to the required decimal places
+        format_string = f"{{:.{nPlaces}f}}"
+        return format_string.format(num)
+    except ValueError:
+        raise ValueError("Invalid input: The number_str must be a valid number string.")
+
 def encrypt2(message: deque[list], seed, containerNumber):
   random.seed(seed)
   
-  keyLength = 9
+  keyLength = 3
   keyMin = pow(10, keyLength-1)
   keyMax = (keyMin * 10) - 1
   
@@ -102,15 +126,19 @@ def encrypt2(message: deque[list], seed, containerNumber):
   
   number_to_save = str(containerNumber)
   rounded = round_to_percent(containerNumber, 1)
-  encrypted_number_string = str(rounded)
+  encrypted_number_string = str(pad(rounded, 5))
   
   while True:
+    if (len(message) == 0):
+      break
     character = message[0]
 
     messageCode = 0
     messageCode = characters_to_ascii_string(character)
+    
+    encrypted_code = int(messageCode) ^ key;
 
-    encrypted_number_string = encrypted_number_string + str(messageCode)
+    encrypted_number_string = encrypted_number_string + str(encrypted_code)
     
     if not ((str(float(encrypted_number_string)) == encrypted_number_string) and (round_to_percent(float(encrypted_number_string), 1) == rounded)):
       break
