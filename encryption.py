@@ -129,8 +129,6 @@ def encrypt2(message: deque[list], seed, containerNumber):
   encrypted_number_string = str(pad(rounded, 5))
   
   while True:
-    if (len(message) == 0):
-      break
     character = message[0]
 
     messageCode = 0
@@ -144,5 +142,7 @@ def encrypt2(message: deque[list], seed, containerNumber):
       break
     message.popleft()
     number_to_save = encrypted_number_string
+    if (len(message) == 0):
+      break
   
   return number_to_save, message

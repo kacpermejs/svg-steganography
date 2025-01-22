@@ -105,9 +105,9 @@ def modify_floats_in_svg_2(input_file_path, output_file_path, replacement_functi
 
     matches_number = len(matches)
 
-    if(len(partitioned_list) > matches_number):
-        print("Too long message.")
-        return 
+    # if(len(partitioned_list) > matches_number):
+    #     print("Too long message.")
+    #     return 
 
     # List to store the parts of the modified content
     modified_content = []

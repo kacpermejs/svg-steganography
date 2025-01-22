@@ -101,14 +101,12 @@ class SVGProcessor:
                 fraction = value[1]
                 default_value = value[2]
                 predicate = value[3]
-
-                if random.random() < fraction:
-                    if attr in existing_attributes:
-                        # Append the new value to the existing one
-                        existing_attributes[attr] = f'{float(existing_attributes[attr]) + attr_value}'
-                    else:
-                        # Add the attribute with the new value if the probability check passes
-                        existing_attributes[attr] = default_value + attr_value
+                
+                if attr in existing_attributes and predicate(float(existing_attributes[attr])):
+                    if random.random() < fraction:
+                        if attr in existing_attributes:
+                            # Append the new value to the existing one
+                            existing_attributes[attr] = f'{float(existing_attributes[attr]) + attr_value}'
 
             # Reconstruct the attributes string
             updated_attributes = ' '.join(f'{attr}="{value}"' for attr, value in existing_attributes.items())
