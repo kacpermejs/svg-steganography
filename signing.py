@@ -221,7 +221,7 @@ class SVGProcessor:
 
         # Initialize a dictionary to count value occurrences
         match_counts = {key: 0 for key in self.micro_value_changes}
-        total_elements = 0
+        all_counts = {key: 0 for key in self.micro_value_changes}
 
         # Traverse the SVG elements and count relevant values
         for element in root.iter():
@@ -230,8 +230,7 @@ class SVGProcessor:
 
             if tag not in allowed_tags:
                 continue  # Skip elements not in the allowed subset
-
-            total_elements += 1
+            
             for key, value in self.micro_value_changes.items():
                 # Extract the expected change and predicate from the tuple
                 expected_change = value[0]
@@ -239,9 +238,12 @@ class SVGProcessor:
                 
                 if key in element.attrib:
                     try:
+                        # Count this element as it has our attribute
+                        all_counts[key] += 1
+                        
                         # Attempt to convert the attribute value to a float for numeric operations
                         numeric_value = float(element.attrib[key])
-
+                    
                         # Subtract and apply the predicate
                         if predicate(numeric_value - expected_change):
                             match_counts[key] += 1  # Increment the count for the specific key
@@ -251,7 +253,7 @@ class SVGProcessor:
 
         # Compute the actual fractions
         actual_fractions = {
-            key: count / total_elements if total_elements > 0 else 0
+            key: count / all_counts[key] if all_counts[key] > 0 else 0
             for key, count in match_counts.items()
         }
 
