@@ -35,9 +35,6 @@ def encrypt(message, seed, containerNumber, chunk_size):
   
   key = random.randint(keyMin, keyMax)
   
-  print('key:')
-  print(key)
-  
   messageCode = 0
   messageCode = characters_to_ascii_string(message)
   
