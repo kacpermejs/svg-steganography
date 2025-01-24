@@ -118,9 +118,6 @@ def encrypt2(message: deque[list], seed, containerNumber):
   
   key = random.randint(keyMin, keyMax)
   
-  print('key:')
-  print(key)
-  
   number_to_save = str(containerNumber)
   rounded = round_to_percent(containerNumber, 1)
   encrypted_number_string = str(pad(rounded, 5))
